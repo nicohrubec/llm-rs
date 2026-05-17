@@ -12,6 +12,7 @@ mod nn;
 
 use matrix::Matrix;
 use nn::{Layer, Linear, ReLU, Sigmoid, Sequential};
+use std::time::Instant;
 
 fn main() {
     let input = Matrix::from_vec(vec![1.0, 2.0, 3.0], 1, 3);
@@ -23,7 +24,12 @@ fn main() {
         Box::new(linear2),
         Box::new(Sigmoid),
     ]);
+    println!("Sequential network created");
+
+    let start = Instant::now();
     let output = sequential.forward(input);
+    let duration = start.elapsed();
+    println!("Time taken: {:?}", duration);
     println!("Result of sequential forward:");
     output.print();
 }
