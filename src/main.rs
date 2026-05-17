@@ -11,13 +11,18 @@ mod matrix;
 mod nn;
 
 use matrix::Matrix;
-use nn::{Layer, Linear, Sequential};
+use nn::{Layer, Linear, ReLU, Sigmoid, Sequential};
 
 fn main() {
     let input = Matrix::from_vec(vec![1.0, 2.0, 3.0], 1, 3);
     let linear1 = Linear::new(3, 2);
     let linear2 = Linear::new(2, 1);
-    let sequential = Sequential::from_layers(vec![Box::new(linear1), Box::new(linear2)]);
+    let sequential = Sequential::from_layers(vec![
+        Box::new(linear1),
+        Box::new(ReLU),
+        Box::new(linear2),
+        Box::new(Sigmoid),
+    ]);
     let output = sequential.forward(input);
     println!("Result of sequential forward:");
     output.print();

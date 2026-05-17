@@ -4,6 +4,20 @@ pub trait Layer {
     fn forward(&self, input: Matrix) -> Matrix;
 }
 
+pub struct ReLU;
+impl Layer for ReLU {
+    fn forward(&self, input: Matrix) -> Matrix {
+        Matrix::from_vec(input.data.iter().map(|x| if *x > 0.0 { *x } else { 0.0 }).collect(), input.rows, input.cols)
+    }
+}
+
+pub struct Sigmoid;
+impl Layer for Sigmoid {
+    fn forward(&self, input: Matrix) -> Matrix {
+        Matrix::from_vec(input.data.iter().map(|x| 1.0 / (1.0 + f64::exp(-*x))).collect(), input.rows, input.cols)
+    }
+}
+
 pub struct Linear {
     weights: Matrix,
     bias: Matrix,
@@ -73,5 +87,38 @@ mod tests {
         assert_eq!(output.rows, 1);
         assert_eq!(output.cols, 1);
         assert_eq!(output.data.len(), 1);
+    }
+    
+    #[test]
+    fn test_relu_forward_positive() {
+        let relu = ReLU;
+        let input = Matrix::from_vec(vec![1.0, 2.0, 3.0], 1, 3);
+        let output = relu.forward(input);
+        assert_eq!(output.rows, 1);
+        assert_eq!(output.cols, 3);
+        assert_eq!(output.data.len(), 1 * 3);
+        assert_eq!(output.data, vec![1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn test_relu_forward_negative() {
+        let relu = ReLU;
+        let input = Matrix::from_vec(vec![-1.0, -2.0, -3.0], 1, 3);
+        let output = relu.forward(input);
+        assert_eq!(output.rows, 1);
+        assert_eq!(output.cols, 3);
+        assert_eq!(output.data.len(), 1 * 3);
+        assert_eq!(output.data, vec![0.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn test_sigmoid_forward() {
+        let sigmoid = Sigmoid;
+        let input = Matrix::from_vec(vec![0.0, 1.0, 2.0, 3.0], 1, 4);
+        let output = sigmoid.forward(input);
+        assert_eq!(output.rows, 1);
+        assert_eq!(output.cols, 4);
+        assert_eq!(output.data.len(), 1 * 4);
+        assert_eq!(output.data, vec![0.5, 0.7310585786300049, 0.8807970779778823, 0.9525741268224334]);
     }
 }
