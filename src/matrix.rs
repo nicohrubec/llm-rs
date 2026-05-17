@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use std::ops::Mul;
+use std::ops::Add;
 use rand::RngExt;
 
 pub struct Matrix {
@@ -57,6 +58,25 @@ impl Mul for Matrix {
                     sum += self.at(i, k) * other.at(k, j);
                 }
                 result.set(i, j, sum);
+            }
+        }
+
+        result
+    }
+}
+
+// matrix addition
+impl Add for Matrix {
+    type Output = Matrix;
+
+    fn add(self, other: Matrix) -> Matrix {
+        assert_eq!(self.rows, other.rows, "dimension mismatch");
+        assert_eq!(self.cols, other.cols, "dimension mismatch");
+        let mut result = Matrix::zeros(self.rows, self.cols);
+
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                result.set(i, j, self.at(i, j) + other.at(i, j));
             }
         }
 
@@ -125,5 +145,16 @@ mod tests {
         assert_eq!(c.cols, 2);
         assert_eq!(c.data.len(), 2 * 2);
         assert_eq!(c.data, vec![58.0, 64.0, 139.0, 154.0]);
+    }
+
+    #[test]
+    fn test_matrix_add() {
+        let a = Matrix::from_vec(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
+        let b = Matrix::from_vec(vec![7.0, 8.0, 9.0, 10.0, 11.0, 12.0], 2, 3);
+        let c = a + b;
+        assert_eq!(c.rows, 2);
+        assert_eq!(c.cols, 3);
+        assert_eq!(c.data.len(), 2 * 3);
+        assert_eq!(c.data, vec![8.0, 10.0, 12.0, 14.0, 16.0, 18.0]);
     }
 }
