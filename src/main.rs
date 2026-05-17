@@ -5,6 +5,8 @@
 // - sequential network with forward function
 // - activation function (relu, softmax)
 
+#![allow(dead_code)]
+
 mod matrix;
 mod nn;
 

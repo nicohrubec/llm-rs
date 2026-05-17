@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::ops::Mul;
 use std::ops::Add;
 use rand::RngExt;
