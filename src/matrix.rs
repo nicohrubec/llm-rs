@@ -4,8 +4,8 @@ use rand::RngExt;
 
 pub struct Matrix {
     pub data: Vec<f64>,
-    rows: usize,
-    cols: usize,
+    pub rows: usize,
+    pub cols: usize,
 }
 
 impl Matrix {
@@ -42,10 +42,10 @@ impl Matrix {
 }
 
 // matrix multiplication
-impl Mul for Matrix {
+impl Mul<&Matrix> for Matrix {
     type Output = Matrix;
 
-    fn mul(self, other: Matrix) -> Matrix {
+    fn mul(self, other: &Matrix) -> Matrix {
         assert_eq!(self.cols, other.rows, "dimension mismatch");
         let mut result = Matrix::zeros(self.rows, other.cols);
 
@@ -64,10 +64,10 @@ impl Mul for Matrix {
 }
 
 // matrix addition
-impl Add for Matrix {
+impl Add<&Matrix> for Matrix {
     type Output = Matrix;
 
-    fn add(self, other: Matrix) -> Matrix {
+    fn add(self, other: &Matrix) -> Matrix {
         assert_eq!(self.rows, other.rows, "dimension mismatch");
         assert_eq!(self.cols, other.cols, "dimension mismatch");
         let mut result = Matrix::zeros(self.rows, self.cols);
@@ -138,7 +138,7 @@ mod tests {
     fn test_matrix_mul() {
         let a = Matrix::from_vec(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
         let b = Matrix::from_vec(vec![7.0, 8.0, 9.0, 10.0, 11.0, 12.0], 3, 2);
-        let c = a * b;
+        let c = a * &b;
         assert_eq!(c.rows, 2);
         assert_eq!(c.cols, 2);
         assert_eq!(c.data.len(), 2 * 2);
@@ -149,7 +149,7 @@ mod tests {
     fn test_matrix_add() {
         let a = Matrix::from_vec(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
         let b = Matrix::from_vec(vec![7.0, 8.0, 9.0, 10.0, 11.0, 12.0], 2, 3);
-        let c = a + b;
+        let c = a + &b;
         assert_eq!(c.rows, 2);
         assert_eq!(c.cols, 3);
         assert_eq!(c.data.len(), 2 * 3);

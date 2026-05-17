@@ -11,18 +11,14 @@ mod matrix;
 mod nn;
 
 use matrix::Matrix;
-use nn::Linear;
+use nn::{Layer, Linear, Sequential};
 
 fn main() {
-    let a = Matrix::random(3, 4);
-    let b = Matrix::random(4, 3);
-    let c = a * b;
-    println!("Result of matrix multiplication:");
-    c.print();
-
-    let linear = Linear::new(3, 2);
     let input = Matrix::from_vec(vec![1.0, 2.0, 3.0], 1, 3);
-    let output = linear.forward(input);
-    println!("Result of linear forward:");
+    let linear1 = Linear::new(3, 2);
+    let linear2 = Linear::new(2, 1);
+    let sequential = Sequential::from_layers(vec![Box::new(linear1), Box::new(linear2)]);
+    let output = sequential.forward(input);
+    println!("Result of sequential forward:");
     output.print();
 }
