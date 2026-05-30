@@ -1,9 +1,28 @@
-// what we need to implement a simple MLP inference:
-// - matrix multiplication
-// - vector addition
-// - linear layer with forward function
-// - sequential network with forward function
-// - activation function (relu, softmax)
+// plan:
+// 1. get single token generation working
+//   - be able to generate a set of tokens given input
+//   - gpt2 model
+//     - token embedding
+//     - positional encoding
+//     - transformer block
+//       - layer norm
+//       - scaled dot product attention
+//       - multi-head attention
+//       - feed forward network
+//   - then these need to be stacked to form the transformer model
+//   - head
+//     - linear layer with weights loaded from file
+//     - softmax
+// 2. correctness/performance checks
+//   - load pretrained weights into architecture
+//   - load a pytorch model with the same weights + architecture
+//   - compare outputs to ensure they are the same
+//   - time inference performance and compare (also cpu vs gpu)
+// 3. get cpu performance close to pytorch model
+//   - get profiles
+//   - optimizations (kv cache,memory, simd, multithreading, quantization, etc.)
+// 4. get gpu performance close to pytorch model with custom cuda kernels
+// 5. batch inference
 
 #![allow(dead_code)]
 
